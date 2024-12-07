@@ -15,6 +15,9 @@ export default function Home() {
         <Anchor component={Link} href="/users">
           Users
         </Anchor>
+        <Anchor component={Link} href="/submissions">
+          Submissions
+        </Anchor>
       </Stack>
     </Container>
   );

@@ -28,9 +28,9 @@ export default function ShepherdSvg() {
           y2="54.979"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#FDC331"></stop>
-          <stop offset="0.418" stop-color="#FA9742"></stop>
-          <stop offset="1" stop-color="#DA43E7"></stop>
+          <stop stopColor="#FDC331"></stop>
+          <stop offset="0.418" stopColor="#FA9742"></stop>
+          <stop offset="1" stopColor="#DA43E7"></stop>
         </linearGradient>
       </defs>
     </svg>

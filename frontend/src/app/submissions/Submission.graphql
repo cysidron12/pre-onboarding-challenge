@@ -1,0 +1,26 @@
+fragment SubmissionFields on Submission {
+  id
+  contractorName
+  contractorEmail
+  contractorPhone
+  policyEffectiveDate
+  policyExpirationDate
+}
+
+query Submissions {
+  submissions {
+    ...SubmissionFields
+  }
+}
+
+mutation CreateSubmission($input: CreateSubmissionInput!) {
+  createSubmission(input: $input) {
+    ...SubmissionFields
+  }
+}
+
+mutation DeleteSubmission($id: ID!) {
+  deleteSubmission(id: $id) {
+    ...SubmissionFields
+  }
+}
