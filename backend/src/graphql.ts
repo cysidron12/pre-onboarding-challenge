@@ -159,6 +159,8 @@ builder.mutationField("createSubmission", (t) =>
           ...args.input,
           policyEffectiveDate: new Date(args.input.policyEffectiveDate),
           policyExpirationDate: new Date(args.input.policyExpirationDate),
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
       });
     },
