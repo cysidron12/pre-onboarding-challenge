@@ -4,7 +4,6 @@ import {
   Anchor,
   Box,
   Button,
-  Text,
   Container,
   Divider,
   Group,
@@ -16,24 +15,41 @@ import {
 } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
-import { DateInput, DatePicker } from "@mantine/dates";
+
+import { DateInput } from "@mantine/dates";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 import {
   useCreateSubmissionMutation,
   useSubmissionsQuery,
   useDeleteSubmissionMutation,
+  Submissions as SubmissionsDocument,
+  SubmissionsQuery,
 } from "./Submission.generated";
 import { namedOperations } from "../../graphql/namedOperations.generated";
 import {
   parsePhoneNumberWithError,
   isValidPhoneNumber,
 } from "libphonenumber-js";
-import { useEffect } from "react";
 
 const CreateSubmissionForm = () => {
   const [create, { loading }] = useCreateSubmissionMutation({
-    refetchQueries: [namedOperations.Query.Submissions],
+    // refetchQueries: [namedOperations.Query.Submissions],
+    update: (cache, { data }) => {
+      const newSubmission = data?.createSubmission;
+      const existingSubmissions = cache.readQuery<SubmissionsQuery>({
+        query: SubmissionsDocument,
+      });
+
+      if (existingSubmissions && newSubmission) {
+        cache.writeQuery({
+          query: SubmissionsDocument,
+          data: {
+            submissions: [...existingSubmissions.submissions, newSubmission],
+          },
+        });
+      }
+    },
   });
 
   type FormFields = {
@@ -236,10 +252,12 @@ const SubmissionList = () => {
     <Box>
       <Group>
         <Title order={5}>All Submissions</Title>
-        {loading ? <Loader size="xs" type="bars" /> : null}
       </Group>
       <Divider mb="sm" />
-      {data && data.submissions.length > 0 ? (
+
+      {loading ? (
+        <Loader size="xs" type="bars" />
+      ) : data && data.submissions.length > 0 ? (
         <Table>
           <Table.Thead>
             <Table.Tr>
