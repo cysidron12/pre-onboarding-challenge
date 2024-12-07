@@ -125,6 +125,7 @@ const CreateSubmissionForm = () => {
         <Stack gap="md">
           <TextInput
             label="Contractor Name"
+            required
             placeholder="John Doe"
             error={errors.contractorName?.message}
             {...register("contractorName", {
@@ -164,6 +165,7 @@ const CreateSubmissionForm = () => {
             rules={{ required: "Effective date is required" }}
             render={({ field, fieldState }) => (
               <DateInput
+                required
                 label="Policy Effective Date"
                 placeholder="Policy Effective Date"
                 value={field.value}
@@ -184,6 +186,7 @@ const CreateSubmissionForm = () => {
             }}
             render={({ field, fieldState }) => (
               <DateInput
+                required
                 label="Policy Expiration Date"
                 placeholder="Policy Expiration Date"
                 value={field.value}
@@ -213,10 +216,6 @@ const SubmissionList = () => {
     return <Alert title="uh oh">{error.message}</Alert>;
   }
 
-  if (!data || data.submissions.length === 0) {
-    return null;
-  }
-
   const handleDelete = async (id: string | null | undefined) => {
     if (!id) return;
     try {
@@ -240,42 +239,50 @@ const SubmissionList = () => {
         {loading ? <Loader size="xs" type="bars" /> : null}
       </Group>
       <Divider mb="sm" />
-      <Table>
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>Submission ID</Table.Th>
-            <Table.Th>Contractor Name</Table.Th>
-            <Table.Th>Contractor Email</Table.Th>
-            <Table.Th>Contractor Phone</Table.Th>
-            <Table.Th>Policy Effective Date</Table.Th>
-            <Table.Th>Policy Expiration Date</Table.Th>
-            <Table.Th>Actions</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
-          {data.submissions.map((submission) => (
-            <Table.Tr key={submission.id}>
-              <Table.Td>{submission.id}</Table.Td>
-              <Table.Td>{submission.contractorName}</Table.Td>
-              <Table.Td>{submission.contractorEmail}</Table.Td>
-              <Table.Td>{submission.contractorPhone}</Table.Td>
-              <Table.Td>{formatDate(submission.policyEffectiveDate)}</Table.Td>
-              <Table.Td>{formatDate(submission.policyExpirationDate)}</Table.Td>
-              <Table.Td>
-                <Button
-                  color="red"
-                  size="xs"
-                  variant="outline"
-                  onClick={() => handleDelete(submission.id)}
-                  disabled={!submission.id}
-                >
-                  Delete
-                </Button>
-              </Table.Td>
+      {data && data.submissions.length > 0 ? (
+        <Table>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>Submission ID</Table.Th>
+              <Table.Th>Contractor Name</Table.Th>
+              <Table.Th>Contractor Email</Table.Th>
+              <Table.Th>Contractor Phone</Table.Th>
+              <Table.Th>Policy Effective Date</Table.Th>
+              <Table.Th>Policy Expiration Date</Table.Th>
+              <Table.Th>Actions</Table.Th>
             </Table.Tr>
-          ))}
-        </Table.Tbody>
-      </Table>
+          </Table.Thead>
+          <Table.Tbody>
+            {data.submissions.map((submission) => (
+              <Table.Tr key={submission.id}>
+                <Table.Td>{submission.id}</Table.Td>
+                <Table.Td>{submission.contractorName}</Table.Td>
+                <Table.Td>{submission.contractorEmail}</Table.Td>
+                <Table.Td>{submission.contractorPhone}</Table.Td>
+                <Table.Td>
+                  {formatDate(submission.policyEffectiveDate)}
+                </Table.Td>
+                <Table.Td>
+                  {formatDate(submission.policyExpirationDate)}
+                </Table.Td>
+                <Table.Td>
+                  <Button
+                    color="red"
+                    size="xs"
+                    variant="outline"
+                    onClick={() => handleDelete(submission.id)}
+                    disabled={!submission.id}
+                  >
+                    Delete
+                  </Button>
+                </Table.Td>
+              </Table.Tr>
+            ))}
+          </Table.Tbody>
+        </Table>
+      ) : (
+        <Alert>No submissions submitted yet</Alert>
+      )}
     </Box>
   );
 };
